@@ -1,0 +1,20 @@
+# gaml library 
+gaml/
+
+# data files
+*.csv
+
+# .idx files
+*.idx
+
+# tweet generator executable
+tweet-generator/tweet-generator
+
+# python virtual environnement
+*venv
+
+# jupyter notebook in Python
+*.ipynb
+
+# pycache
+*__pycache__
