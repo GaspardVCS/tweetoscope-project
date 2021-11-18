@@ -10,7 +10,7 @@ class Tweet:
         self.msg  = ""
         self.time = 0
         self.magnitude = 0
-        self.source = 0
+        self.source = None
         self.info = ""
         if kafka_msg is not None:
             self.create_tweet(kafka_msg)
@@ -22,12 +22,12 @@ class Tweet:
         Note: In Python, the kafka msg.value is already a dictionnary,
         no need to create a difficult string eater.
         """
-        self.type = kafka_msg.get("type")
-        self.msg = kafka_msg.get("msg")
-        self.time = kafka_msg.get("t")
-        self.magnitude = kafka_msg.get("m")
-        self.source = kafka_msg.get("source")
-        self.info = kafka_msg.get("info")
+        self.type = kafka_msg.value.get("type")
+        self.msg = kafka_msg.value.get("msg")
+        self.time = kafka_msg.value.get("t")
+        self.magnitude = kafka_msg.value.get("m")
+        self.source = kafka_msg.key
+        self.info = kafka_msg.value.get("info")
     
     def create_tweet_dict(self):
         """
