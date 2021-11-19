@@ -1,6 +1,5 @@
 import argparse
 import json
-import time
 from kafka import KafkaConsumer, KafkaProducer
 from tweetoscopeCollectorParams import TweetoscopeCollectorParams
 
@@ -10,12 +9,17 @@ args = parser.parse_args()
 
 collector = TweetoscopeCollectorParams(args.param_file_path)
 params = {
+  "brokers": collector.kafka.brokers,
+  "in": collector.topic.in_,
   "terminated": collector.times.terminated,
   "observations": collector.times.observations,
   "min_cascade_size": collector.cascade.min_cascade_size,
+  "out_series": collector.topic.out_series,
+  "out_properties": collector.topic.out_properties,
 }
-consumer = KafkaConsumer('tweets',                             # Topic name
-  bootstrap_servers = collector.kafka.brokers,                 # List of brokers passed from the command line
+
+consumer = KafkaConsumer(params["in"],                             # Topic name
+  bootstrap_servers = params["brokers"],                 # List of brokers passed from the command line
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
   key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
 )
@@ -31,9 +35,10 @@ if __name__ == "__main__":
     from tweet import Tweet
     processor_map = dict()
     for msg in consumer:
-        tweet = Tweet(msg)
-        if tweet.source not in processor_map:
-            processor_map[tweet.source] = Processor(tweet.source, params)
-            print(f"New Processor {tweet.source} !!")
-        processor_map[tweet.source].process_tweet(tweet)
-        del tweet
+      print(msg.value)
+      tweet = Tweet(msg)
+      if tweet.source not in processor_map:
+          processor_map[tweet.source] = Processor(tweet.source, params)
+          print(f"New Processor {tweet.source} !!")
+      processor_map[tweet.source].process_tweet(tweet)
+      del tweet
