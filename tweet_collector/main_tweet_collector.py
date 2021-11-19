@@ -11,6 +11,8 @@ args = parser.parse_args()
 collector = TweetoscopeCollectorParams(args.param_file_path)
 params = {
   "terminated": collector.times.terminated,
+  "observations": collector.times.observations,
+  "min_cascade_size": collector.cascade.min_cascade_size,
 }
 consumer = KafkaConsumer('tweets',                             # Topic name
   bootstrap_servers = collector.kafka.brokers,                 # List of brokers passed from the command line
@@ -27,7 +29,6 @@ producer = KafkaProducer(
 if __name__ == "__main__":
     from processor import Processor
     from tweet import Tweet
-    
     processor_map = dict()
     for msg in consumer:
         tweet = Tweet(msg)
