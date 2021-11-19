@@ -24,5 +24,5 @@ class Processor:
                 self.cascade_queue.remove((t, c))
                 del c
         if not tweet_processed and tweet.type == "tweet":
-            self.cascade_queue.append((tweet.time, Cascade(tweet, self.params["terminated"])))
+            self.cascade_queue.append((tweet.time, Cascade(tweet, self.params)))
             print(f"Cascade {tweet.cascade} added to Processor {self.source}")
