@@ -1,7 +1,12 @@
+import sys
+sys.path.append("..")
 import argparse                   # To parse command line arguments
-import json                       # To parse and dump JSON
+import json
+from time import time                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
-
+import time
+from tweet_collector.tweet import Tweet
+ 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
 args = parser.parse_args()  # Parse arguments
@@ -28,6 +33,8 @@ def display_message(msg):
   info: {info}")
 
 for msg in consumer:                            # Blocking call waiting for a new message
-    print(type(msg.value))
-    print(msg)
+    print(msg.key, msg.value)
+    tweet = Tweet(msg)
+    tweet.display()
+    time.sleep(5)
     # display_message(msg)                        # Write key and payload of the received message
