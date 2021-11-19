@@ -29,6 +29,10 @@ class Cascade:
         """
         if (tweet.time - self.rt_mag_time[-1][0] > int(self.params["terminated"])) \
             and (len(self.rt_mag_time) >= self.params["min_cascade_size"]):
+            # if there are still observations windows that weren't send, we send them
+            # NOTE: maybe send them only at the end of the cascade?
+            for o in self.params["observations"]: 
+                self.send_partial_cascade(o)
             self.send_cascade_properties()
             return True
         return False
@@ -40,7 +44,7 @@ class Cascade:
         """
         msg = {
             "observation_window": int(observation),
-            "partial_cascade": [elem for elem in self.rt_mag_time \
+            "partial_cascade": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
                                 if elem[0] - self.starting_time < int(observation)],
         }
         producer.send(self.params["out_series"], key=str(self.identifier), value=msg) # Send a new message to topic
