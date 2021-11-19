@@ -59,12 +59,12 @@ class TweetoscopeCollectorParams:
                     self.topic.out_properties = val
             elif self.current_section == "times":
                 if key == "observation":
-                    self.times.observations.append(val)
+                    self.times.observations.append(int(val))
                 elif key == "terminated":
-                    self.times.terminated = val
+                    self.times.terminated = int(val)
             elif self.current_section == "cascade":
                 if key == "min_cascade_size":
-                    self.cascade.min_cascade_size = val
+                    self.cascade.min_cascade_size = int(val)
 
     def display_properties(self):
         print("[kafka]")
