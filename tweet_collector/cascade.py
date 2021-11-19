@@ -43,7 +43,7 @@ class Cascade:
             "partial_cascade": [elem for elem in self.rt_mag_time \
                                 if elem[0] - self.starting_time < int(observation)],
         }
-        producer.send('cascade_series', key=str(self.identifier), value=msg) # Send a new message to topic
+        producer.send(self.params["out_series"], key=str(self.identifier), value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
     
     def send_cascade_properties(self):
@@ -53,5 +53,5 @@ class Cascade:
         msg = {
             "cascade": self.rt_mag_time,
         }
-        producer.send('cascade_properties', key=str(self.identifier), value=msg) # Send a new message to topic
+        producer.send(self.params["out_properties"], key=str(self.identifier), value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
