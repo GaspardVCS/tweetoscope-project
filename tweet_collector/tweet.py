@@ -30,7 +30,7 @@ class Tweet:
         self.magnitude = kafka_msg.value.get("m")
         self.source = kafka_msg.key
         self.info = kafka_msg.value.get("info")
-        self.cascade = int(self.info.split("")[1])
+        self.cascade = int(self.info.split("=")[1])
         self.id = kafka_msg.value.get("tweet_id")
     
     def create_tweet_dict(self):
