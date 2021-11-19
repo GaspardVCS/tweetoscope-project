@@ -8,8 +8,12 @@ class Cascade:
         self.terminated = int(terminated)
 
     def process_tweet(self, tweet):
+        """
+        Add the retweet time and retweet maginitude 
+        to the cascade
+        """
         self.rt_mag_time.append((tweet.time, tweet.magnitude))
-        print(f"Tweet {tweet.id} processed at time {tweet.time}!")
+        print(f"Tweet {tweet.id} processed at time {tweet.time}")
     
     def is_terminated(self, tweet):
         """
