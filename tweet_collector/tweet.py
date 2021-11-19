@@ -35,7 +35,8 @@ class Tweet:
     
     def create_tweet_dict(self):
         """
-        Create a pyton dictionnary with the Tweet information
+        Create a pyton dictionnary with the Tweet information, only useful
+        for the display function. Might merge both functions.
         """
         tweet_dict = dict()
         tweet_dict["type"] = self.type
