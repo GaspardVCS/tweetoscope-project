@@ -52,11 +52,11 @@ class TweetoscopeCollectorParams:
                     self.kafka.brokers = val
             elif self.current_section == "topic":
                 if key == "in":
-                    self.topic.in_ = val
+                    self.topic.in_ = val.split("\n")[0]
                 elif key == "out_series":
-                    self.topic.out_series = val
+                    self.topic.out_series = val.split("\n")[0]
                 elif key == "out_properties":
-                    self.topic.out_properties = val
+                    self.topic.out_properties = val.split("\n")[0]
             elif self.current_section == "times":
                 if key == "observation":
                     self.times.observations.append(int(val))
