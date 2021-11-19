@@ -51,7 +51,7 @@ class Cascade:
         Send the cascade properties to the kafka topic 'cascade_properties'
         """
         msg = {
-            "cascade": self.rt_mag_time,
+            "number_retweet": len(self.rt_mag_time),
         }
         producer.send(self.params["out_properties"], key=str(self.identifier), value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
