@@ -1,9 +1,7 @@
 import argparse
 import json
 import time
-from kafka import KafkaConsumer
-from processor import Processor
-from tweet import Tweet
+from kafka import KafkaConsumer, KafkaProducer
 from tweetoscopeCollectorParams import TweetoscopeCollectorParams
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
@@ -14,13 +12,22 @@ collector = TweetoscopeCollectorParams(args.param_file_path)
 params = {
   "terminated": collector.times.terminated,
 }
-consumer = KafkaConsumer('tweets',                   # Topic name
-  bootstrap_servers = collector.kafka.brokers,                        # List of brokers passed from the command line
+consumer = KafkaConsumer('tweets',                             # Topic name
+  bootstrap_servers = collector.kafka.brokers,                 # List of brokers passed from the command line
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
   key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
 )
 
+producer = KafkaProducer(
+  bootstrap_servers = collector.kafka.brokers,                     # List of brokers passed from the command line
+  value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
+  key_serializer=str.encode                                        # How to serialize the key
+)
+
 if __name__ == "__main__":
+    from processor import Processor
+    from tweet import Tweet
+    
     processor_map = dict()
     for msg in consumer:
         tweet = Tweet(msg)
