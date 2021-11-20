@@ -40,7 +40,7 @@ def loglikelihood(params, history, t):
         return LL
 
 
-class Predictor:
+class Estimator:
     def __init__(self):
         self.alpha = 2.4
         self.mu = 10

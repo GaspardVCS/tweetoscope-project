@@ -1,4 +1,4 @@
-from predictor import Predictor
+from estimator import Estimator
 from kafka import KafkaConsumer
 import numpy as np
 import json
@@ -17,7 +17,7 @@ consumer2 = KafkaConsumer('cascade_properties',                             # To
 
 
 if __name__ == "__main__":
-    predictor = Predictor()
+    predictor = Estimator()
     results = dict()
     while True:
         cascade_series = consumer1.poll(timeout_ms=100)
