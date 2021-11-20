@@ -44,11 +44,14 @@ class Cascade:
         kafka topic 'cascade_series'
         """
         msg = {
-            "observation_window": int(observation),
-            "partial_cascade": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
+            "type": "serie",
+            "cid": self.identifier,
+            "msg": None, 
+            "T_obs": int(observation),
+            "tweets": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
                                 if (elem[0] - self.starting_time) < int(observation)],
         }
-        producer.send(self.params["out_series"], key=str(self.identifier), value=msg) # Send a new message to topic
+        producer.send(self.params["out_series"], key=None, value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
     
     def send_cascade_properties(self):
