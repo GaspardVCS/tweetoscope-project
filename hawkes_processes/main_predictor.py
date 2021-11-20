@@ -1,21 +1,42 @@
 from predictor import Predictor
+from kafka import KafkaConsumer
 import numpy as np
+import json
+
+consumer1 = KafkaConsumer('cascade_series',                             # Topic name
+  bootstrap_servers = "localhost:9092",                 # List of brokers passed from the command line
+  value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+  key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
+)
+
+consumer2 = KafkaConsumer('cascade_properties',                             # Topic name
+  bootstrap_servers = "localhost:9092",                 # List of brokers passed from the command line
+  value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+  key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
+)
+
 
 if __name__ == "__main__":
     predictor = Predictor()
-    history_600 = np.array([[0, 97], [2, 20771], [3, 140], [20, 240], [65, 75], [78, 51], [79, 64], [87, 1087], [100, 345], \
-        [106, 968], [125, 655], [149, 87], [171, 150], [200, 1071], [241, 762], [273, 395], [274, 323], \
-        [293, 3671], [362, 893], [374, 1848], [392, 340], [421, 410], [423, 300], [432, 12], [463, 589], [491, 483]])
-    
-    history_1200 = np.array([[0, 97], [2, 20771], [3, 140], [20, 240], [65, 75], [78, 51], [79, 64], [87, 1087], \
-        [100, 345], [106, 968], [125, 655], [149, 87], \
-        [171, 150], [200, 1071], [241, 762], [273, 395], [274, 323], [293, 3671], [362, 893], \
-         [374, 1848], [392, 340], [421, 410], [423, 300], [432, 12], [463, 589], \
-             [491, 483], [670, 162], [728, 286], [797, 26], [915, 490], [997, 361]])
+    results = dict()
+    while True:
+        cascade_series = consumer1.poll(timeout_ms=100)
+        if cascade_series:
+            cascade_series = cascade_series.get(list(cascade_series.keys())[0])
+        cascade_properties = consumer2.poll(timeout_ms=100)
+        if cascade_properties:
+            cascade_properties = cascade_properties.get(list(cascade_properties.keys())[0])
+        for cascade_serie in cascade_series:
+            history = np.array(cascade_serie.value["partial_cascade"])
+            observation = int(cascade_serie.value["observation_window"])
 
-    _, params = predictor.compute_MLE(history_600, 600)
-    prediction1 = predictor.prediction(params, history_600, 600)
-    prediction2 = predictor.prediction(params, history_1200, 1200)
-    print(f"Prediction 1 : {prediction1}")
-    print(f"Prediction 2: {prediction2}")
-    print(f"real : {len(history_1200)}")
+            _, params = predictor.compute_MLE(history, observation)
+            prediction = predictor.prediction(params, history, observation)
+
+            if int(cascade_serie.key) not in results:
+                results[int(cascade_serie.key)] = dict()
+            results[int(cascade_serie.key)][observation] = int(prediction)
+        for cascade_property in cascade_properties:
+            if int(cascade_property.key) in results:
+                results[int(cascade_property.key)]["real"] = cascade_property.value["number_retweet"]
+                print(cascade_property.key, results[int(cascade_property.key)])
