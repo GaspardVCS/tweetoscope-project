@@ -26,18 +26,18 @@ def main_estimator():
             observation = int(cascade_serie.value["observation_window"])
 
             _, params = estimator.compute_MLE(history, observation)
-            prediction = estimator.prediction(params, history, observation)
+            prediction = int(estimator.prediction(params, history, observation))
 
             msg = {
                 "type": "parameters",
-                "cid": int(cascade_serie.key),
+                "cid": cascade_serie.key,
                 "msg": None,
                 "n_obs": len(history),
-                "n_supp": int(prediction),
-                "params": np.array(params)
+                "n_supp": prediction,
+                "params": list(params),
             }
 
-            producer.send("cascade_properties", key=observation, value=msg) # Send a new message to topic
+            producer.send("cascade_properties", key=str(observation), value=msg) # Send a new message to topic
             producer.flush() # not sure if necessary or not
 
 if __name__ == "__main__":
