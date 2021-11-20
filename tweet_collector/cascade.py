@@ -21,7 +21,7 @@ class Cascade:
             if (tweet.time - self.starting_time) > int(o):
                 self.send_partial_cascade(o)
                 self.params["observations"].remove(o) # We don't want to send the same observations multiple times
-    
+
     def is_terminated(self, tweet):
         """
         Return True if the last tweet in the cascade was seen more than
@@ -46,7 +46,7 @@ class Cascade:
         msg = {
             "observation_window": int(observation),
             "partial_cascade": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
-                                if elem[0] - self.starting_time < int(observation)],
+                                if (elem[0] - self.starting_time) < int(observation)],
         }
         producer.send(self.params["out_series"], key=str(self.identifier), value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
