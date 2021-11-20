@@ -52,7 +52,7 @@ class Cascade:
             "tweets": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
                                 if (elem[0] - self.starting_time) < int(observation)],
         }
-        producer.send(self.params["out_series"], key=None, value=msg) # Send a new message to topic
+        producer.send(self.params["out_series"], key="", value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
     
     def send_cascade_properties(self):
@@ -66,5 +66,5 @@ class Cascade:
                 "n_tot": len(self.rt_mag_time),
                 "t_end": self.rt_mag_time[-1][0],
             }
-            producer.send(self.params["out_properties"], key=observation, value=msg) # Send a new message to topic
+            producer.send(self.params["out_properties"], key=str(observation), value=msg) # Send a new message to topic
             producer.flush() # not sure if necessary or not

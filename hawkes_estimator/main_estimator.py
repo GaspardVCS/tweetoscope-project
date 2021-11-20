@@ -30,7 +30,7 @@ def main_estimator():
 
             msg = {
                 "type": "parameters",
-                "cid": cascade_serie.key,
+                "cid": cascade_serie.value["cid"],
                 "msg": None,
                 "n_obs": len(history),
                 "n_supp": prediction,
