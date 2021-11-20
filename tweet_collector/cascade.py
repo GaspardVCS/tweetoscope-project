@@ -1,5 +1,6 @@
 from tweet import Tweet
 from main_tweet_collector import producer
+import copy
 
 class Cascade:
     def __init__(self, tweet, params):
@@ -7,7 +8,7 @@ class Cascade:
         self.starting_time = tweet.time
         self.first_message = tweet.msg
         self.rt_mag_time = [(tweet.time, tweet.magnitude)] # list of (magnitude, time) of retweet
-        self.params = params
+        self.params = copy.deepcopy(params)
 
     def process_tweet(self, tweet):
         """
@@ -15,7 +16,7 @@ class Cascade:
         to the cascade
         """
         self.rt_mag_time.append((tweet.time, tweet.magnitude))
-        print(f"Tweet {tweet.id} processed at time {tweet.time}")
+        # print(f"Tweet {tweet.id} processed at time {tweet.time}")
         for o in self.params["observations"]:
             if (tweet.time - self.starting_time) > int(o):
                 self.send_partial_cascade(o)
