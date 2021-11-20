@@ -35,7 +35,6 @@ if __name__ == "__main__":
     from tweet import Tweet
     processor_map = dict()
     for msg in consumer:
-      print(msg.value)
       tweet = Tweet(msg)
       if tweet.source not in processor_map:
           processor_map[tweet.source] = Processor(tweet.source, params)
