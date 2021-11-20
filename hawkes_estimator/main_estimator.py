@@ -22,8 +22,8 @@ def main_estimator():
         if cascade_series:
             cascade_series = cascade_series.get(list(cascade_series.keys())[0])
         for cascade_serie in cascade_series:
-            history = np.array(cascade_serie.value["partial_cascade"])
-            observation = int(cascade_serie.value["observation_window"])
+            history = np.array(cascade_serie.value["tweets"])
+            observation = int(cascade_serie.value["T_obs"])
 
             _, params = estimator.compute_MLE(history, observation)
             prediction = int(estimator.prediction(params, history, observation))
