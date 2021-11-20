@@ -1,17 +1,35 @@
-
+from kafka import KafkaProducer
 
 class Predictor:
-    def __init__(self, observation_window):
-        self.key = observation_window
+    def __init__(self, params):
+        self.key = params["key"]
+        self.producer = KafkaProducer()
+    
+    def process_message(self, message):
+        if message["type"] == "size":
+            prediction = self.predict(message)
 
-    def predict(self):
-        pass
+            alert_key = ""
+            alert_message = {
+                "type": "alert",
+                "cid": message["cid"],
+                "msg": None,
+                "T_obs": self.key,
+                "n_tot": prediction,
+            }
+            self.producer.send("alert", key=alert_key, value=alert_message) # Send a new message to topic
+            self.producer.flush() # not sure if necessary or not
 
-    def send_sample(self):
-        pass
+            # TODO: update map to send samples to sample topic
 
-    def send_alert(self):
-        pass
+            # TODO: send message with stat to the stat topic
 
-    def send_stat(self):
-        pass
+        elif message["type"] == "parameters":
+            # TODO: update map to create the samples that will be send to the sample topic
+            pass
+        else:
+            print("ERROR") # add true error
+
+    def predict(self, message):
+        prediction = message["n_prob"]
+        return prediction
