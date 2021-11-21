@@ -26,15 +26,17 @@ def main_estimator():
             observation = int(cascade_serie.value["T_obs"])
 
             _, params = estimator.compute_MLE(history, observation)
-            prediction = int(estimator.prediction(params, history, observation))
+            N_tot, n_star, G1 = int(estimator.prediction(params, history, observation))
+            params.append(n_star)
+            params.append(G1)
 
             msg = {
                 "type": "parameters",
                 "cid": cascade_serie.value["cid"],
                 "msg": None,
                 "n_obs": len(history),
-                "n_supp": prediction,
-                "params": list(params),
+                "n_supp": N_tot,
+                "params": list(params), # p, beta, n_star, G1
             }
 
             producer.send("cascade_properties", key=str(observation), value=msg) # Send a new message to topic
