@@ -1,16 +1,19 @@
 from copy import Error
+import json
 from kafka import KafkaProducer
 
 class Predictor:
     def __init__(self, params):
         self.key = params["key"]
-        self.producer = KafkaProducer()
+        self.producer = KafkaProducer(bootstrap_servers = params["brokers"],
+                                    value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+                                    key_serializer=str.encode)
         self.cascade_map = dict()
     
     def process_message(self, message):
         self.update_map(message)
         cid = message["cid"]
-        if message["type"] == "size":
+        if (message["type"] == "size") and cid in self.cascade_map:
             # Send message to the sample topic for training
             sample_key = self.key
             sample_message = {
@@ -36,7 +39,9 @@ class Predictor:
 
             self.producer.send("stat", key=stat_key, value=stat_message) # Send a new message to topic
             self.producer.flush() # not sure if necessary or not
-        
+
+            del self.cascade_map[cid]
+            
         elif message["type"] == "parameters":
             # Get the prediction
             prediction = self.predict(message)
@@ -63,7 +68,7 @@ class Predictor:
         if message["type"] == "parameters":
             self.cascade_map[cid] = {
                 "params": message["params"],
-                "cascade_serie": message["tweets"],
+                "n_obs": message["n_obs"],
             }
         elif message["type"] == "size":
             if cid in self.cascade_map:
@@ -76,7 +81,7 @@ class Predictor:
     @staticmethod
     def find_true_omega(cascade_dict):
         _, _, n_star, G1 = cascade_dict["params"]
-        W = cascade_dict["n_tot"] - len(cascade_dict["cascade_serie"])
+        W = cascade_dict["n_tot"] - cascade_dict["n_obs"]
         W *= (1 - n_star) / G1
         return W 
 
