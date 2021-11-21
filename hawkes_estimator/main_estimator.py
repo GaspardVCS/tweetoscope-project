@@ -26,7 +26,8 @@ def main_estimator():
             observation = int(cascade_serie.value["T_obs"])
 
             _, params = estimator.compute_MLE(history, observation)
-            N_tot, n_star, G1 = int(estimator.prediction(params, history, observation))
+            params = list(params)
+            N_tot, n_star, G1 = estimator.prediction(params, history, observation)
             params.append(n_star)
             params.append(G1)
 
