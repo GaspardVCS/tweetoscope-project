@@ -114,4 +114,4 @@ class Estimator:
         mis = history[I,1]
         G1 = p * np.sum(mis * np.exp(-beta * (observation - tis)))
         Ntot = n + G1 / (1. - n_star)
-        return Ntot
+        return Ntot, n_star, G1
