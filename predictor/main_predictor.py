@@ -14,6 +14,7 @@ if __name__ == "__main__":
         if msg.key not in predictor_map:
             params = {
                 "key": msg.key,
+                "brokers": "localhost:9092",
             }
             predictor_map[msg.key] = Predictor(params)
         predictor_map[msg.key].process_message(msg.value)
