@@ -1,6 +1,6 @@
 
 class Tweet:
-    def __init__(self, kafka_msg = None):
+    def __init__(self, kafka_msg=None) -> None:
         """
         If a kafka message is given at the initialisation of the 
         Tweet object, it is initialised with the information in 
@@ -17,7 +17,7 @@ class Tweet:
         if kafka_msg is not None:
             self.create_tweet(kafka_msg)
 
-    def create_tweet(self, kafka_msg):
+    def create_tweet(self, kafka_msg) -> None:
         """
         Update the information of the Tweet object based on the message 
         of a kafka producer.
@@ -33,7 +33,7 @@ class Tweet:
         self.cascade = int(self.info.split("=")[1])
         self.id = kafka_msg.value.get("tweet_id")
     
-    def create_tweet_dict(self):
+    def create_tweet_dict(self) -> dict:
         """
         Create a pyton dictionnary with the Tweet information, only useful
         for the display function. Might merge both functions.
@@ -47,7 +47,7 @@ class Tweet:
         tweet_dict["info"] = self.info
         return tweet_dict
     
-    def display(self):
+    def display(self) -> None:
         """
         Print the tweet information in the form of a dictionnary
         """

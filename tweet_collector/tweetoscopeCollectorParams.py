@@ -1,27 +1,27 @@
-
+from typing import Union, Tuple
 
 class Kafka:
-    def __init__(self):
+    def __init__(self) -> None:
         self.brokers = None
 
 class Topic:
-    def __init__(self):
+    def __init__(self) -> None:
         self.in_ = None 
         self.out_series = None  
         self.out_properties = None
 
 class Times:
-    def __init__(self):
+    def __init__(self) -> None:
         self.observations = []
         self.terminated = None
 
 class CascadeParam:
-    def __init__(self):
+    def __init__(self) -> None:
         self.min_cascade_size = None
 	
 
 class TweetoscopeCollectorParams:
-    def __init__(self, param_file_path):
+    def __init__(self, param_file_path:dict) -> None:
         self.kafka = Kafka()
         self.topic = Topic()
         self.times = Times()
@@ -31,7 +31,7 @@ class TweetoscopeCollectorParams:
 
         self._collector()
     
-    def _parse_line(self, line):
+    def _parse_line(self, line:str) -> Union[None, Tuple[str, str]]:
         if line.startswith("["):
             self.current_section = line[1:].split("]")[0]
             return
@@ -39,7 +39,7 @@ class TweetoscopeCollectorParams:
             key, value = line.split("=")
             return key, value
     
-    def _collector(self):
+    def _collector(self) -> None:
         with open(self.param_file_path, "r") as f:
             file = f.readlines()
         for line in file:
@@ -66,7 +66,7 @@ class TweetoscopeCollectorParams:
                 if key == "min_cascade_size":
                     self.cascade.min_cascade_size = int(val)
 
-    def display_properties(self):
+    def display_properties(self) -> None:
         print("[kafka]")
         print(f"    bokers={self.kafka.brokers}")
         print("[topic]")
