@@ -3,12 +3,12 @@ import time
 from cascade import Cascade
 
 class Processor:
-    def __init__(self, source, params):
+    def __init__(self, source:str, params:dict) -> None:
         self.source = source
         self.params = params
         self.cascade_queue = list()
     
-    def process_tweet(self, tweet):
+    def process_tweet(self, tweet:Tweet) -> None:
         tweet_processed = False
         # Traverse the queue in reverse
         for (t, c) in self.cascade_queue:
