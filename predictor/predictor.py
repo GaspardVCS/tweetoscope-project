@@ -3,14 +3,14 @@ import json
 from kafka import KafkaProducer
 
 class Predictor:
-    def __init__(self, params):
+    def __init__(self, params:dict) -> None:
         self.key = params["key"]
         self.producer = KafkaProducer(bootstrap_servers = params["brokers"],
                                     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
                                     key_serializer=str.encode)
         self.cascade_map = dict()
     
-    def process_message(self, message):
+    def process_message(self, message:dict) -> None:
         self.update_map(message)
         cid = message["cid"]
         if (message["type"] == "size") and cid in self.cascade_map:
@@ -59,11 +59,11 @@ class Predictor:
             self.producer.flush() # not sure if necessary or not
 
 
-    def predict(self, message):
+    def predict(self, message:dict) -> float:
         prediction = message["n_supp"]
         return prediction
 
-    def update_map(self, message):
+    def update_map(self, message:dict) -> None:
         cid = message["cid"]
         if message["type"] == "parameters":
             self.cascade_map[cid] = {
@@ -79,12 +79,12 @@ class Predictor:
             raise Error # Not sure about the syntax
 
     @staticmethod
-    def find_true_omega(cascade_dict):
+    def find_true_omega(cascade_dict:dict) -> float:
         _, _, n_star, G1 = cascade_dict["params"]
         W = cascade_dict["n_tot"] - cascade_dict["n_obs"]
         W *= (1 - n_star) / G1
         return W 
 
     @staticmethod
-    def compute_are(n_pred, n_true):
+    def compute_are(n_pred:float, n_true:int) -> float:
         return abs(n_true - n_pred) / n_true
