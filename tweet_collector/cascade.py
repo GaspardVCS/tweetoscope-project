@@ -3,7 +3,7 @@ from main_tweet_collector import producer
 import copy
 
 class Cascade:
-    def __init__(self, tweet, params):
+    def __init__(self, tweet:Tweet, params:dict) -> None:
         self.identifier = tweet.cascade
         self.starting_time = tweet.time
         self.first_message = tweet.msg
@@ -11,7 +11,7 @@ class Cascade:
         self.params = params
         self.observations_to_send = copy.deepcopy(params["observations"])
 
-    def process_tweet(self, tweet):
+    def process_tweet(self, tweet:Tweet) -> None:
         """
         Add the retweet time and retweet maginitude 
         to the cascade
@@ -23,7 +23,7 @@ class Cascade:
                 self.send_partial_cascade(o)
                 self.observations_to_send.remove(o) # We don't want to send the same observations multiple times
 
-    def is_terminated(self, tweet):
+    def is_terminated(self, tweet:Tweet) -> bool:
         """
         Return True if the last tweet in the cascade was seen more than
         terminated seconds before the current tweet. If so the cascade 
@@ -39,7 +39,7 @@ class Cascade:
             return True
         return False
     
-    def send_partial_cascade(self, observation):
+    def send_partial_cascade(self, observation: int) -> None:
         """
         Send the partial cascade for the observation window to the 
         kafka topic 'cascade_series'
@@ -48,14 +48,14 @@ class Cascade:
             "type": "serie",
             "cid": self.identifier,
             "msg": None, 
-            "T_obs": int(observation),
+            "T_obs": observation,
             "tweets": [[elem[0] - self.starting_time, elem[1]] for elem in self.rt_mag_time \
                                 if (elem[0] - self.starting_time) < int(observation)],
         }
         producer.send(self.params["out_series"], key="", value=msg) # Send a new message to topic
         producer.flush() # not sure if necessary or not
     
-    def send_cascade_properties(self):
+    def send_cascade_properties(self) -> None:
         """
         Send the cascade properties to the kafka topic 'cascade_properties'
         """
