@@ -15,7 +15,7 @@ producer = KafkaProducer(
   key_serializer=str.encode                                        # How to serialize the key
 )
 
-def main_estimator():
+def main_estimator() -> None:
     estimator = Estimator()
     while True:
         cascade_series = consumer.poll(timeout_ms=100)
