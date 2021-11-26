@@ -1,0 +1,57 @@
+version: '3.3'
+
+services:
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka-service:
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: "tweets:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_HOST_NAME: "kafka-service"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://:9092"
+
+  tweet_generator:
+    depends_on:
+      - kafka-service
+    build: 
+      context: /home/gaspard/Documents/tweetoscope-2021-09/
+      dockerfile: docker/Dockerfile.tweet_generator
+  
+  tweet_collector:
+    depends_on:
+      - kafka-service
+      - tweet_generator
+    build:
+      context: /home/gaspard/Documents/tweetoscope-2021-09/
+      dockerfile: docker/Dockerfile.tweet_collector
+  
+  # hawkes_estimator:
+  #   depends_on:
+  #     - kafka-service
+  #   build:
+  #     context: /home/gaspard/Documents/tweetoscope-2021-09/
+  #     dockerfile: docker/Dockerfile.hawkes_estimator
+    
+  # predictor:
+  #   depends_on:
+  #     - kafka-service
+  #   build:
+  #     context: /home/gaspard/Documents/tweetoscope-2021-09/
+  #     dockerfile: docker/Dockerfile.predictor
+  
+  # consumer:
+  #   depends_on:
+  #     - kafka-service
+  #   build:
+  #     context: /home/gaspard/Documents/tweetoscope-2021-09/
+  #     dockerfile: docker/Dockerfile.consumers
+  
