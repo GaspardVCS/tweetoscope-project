@@ -1,0 +1,13 @@
+stages:
+  - create_generator_docker_image
+
+services:
+  - docker:dind
+
+generator_docker_image:
+  stage: create_generator_docker_image
+  image: docker:latest
+  script:
+    - docker build -t gaspardv/tweetoscope_generator -f docker/Dockerfile.generator .
+    - docker login -u $CI_REGISTRY_LOGIN -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push gaspardv/tweetoscope_generator
