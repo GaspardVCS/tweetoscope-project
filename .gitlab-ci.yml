@@ -1,13 +1,22 @@
 stages:
-  - create_generator_docker_image
+  - update_generator_docker_image
+  - update_collector_docker_image
 
 services:
   - docker:dind
 
 generator_docker_image:
-  stage: create_generator_docker_image
+  stage: update_generator_docker_image
   image: docker:latest
   script:
     - docker build -t  gaspardv/tweetoscope_generator -f docker/Dockerfile.tweet_generator .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_generator
+
+collector_docker_image:
+  stage: update_collector_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_collector -f docker/Dockerfile.tweet_collector .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_collector
