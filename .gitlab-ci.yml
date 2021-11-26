@@ -31,7 +31,7 @@ estimator_docker_image:
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_estimator
   
-  predictor_docker_image:
+predictor_docker_image:
   stage: update_predictor_docker_image
   image: docker:latest
   script:
