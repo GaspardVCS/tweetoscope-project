@@ -7,7 +7,7 @@ RUN apk add build-essential pkg-config python-dev python-six cython python-numpy
 RUN apk add git cmake -y
 
 RUN apk add boost-dev libssl-dev -y
-RUN apt-get install librdkafka-dev -y
+RUN apk add librdkafka-dev -y
 
 RUN mkdir -p tweetoscope
 
