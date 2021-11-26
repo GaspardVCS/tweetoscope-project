@@ -27,7 +27,7 @@ estimator_docker_image:
   stage: update_estimator_docker_image
   image: docker:latest
   script:
-    - docker build -t  gaspardv/tweetoscope_estimator -f docker/Dockerfile.tweet_estimator .
+    - docker build -t  gaspardv/tweetoscope_estimator -f docker/Dockerfile.hawkes_estimator .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_estimator
   
@@ -35,6 +35,6 @@ predictor_docker_image:
   stage: update_predictor_docker_image
   image: docker:latest
   script:
-    - docker build -t  gaspardv/tweetoscope_predictor -f docker/Dockerfile.tweet_predictor .
+    - docker build -t  gaspardv/tweetoscope_predictor -f docker/Dockerfile.predictor .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_predictor
