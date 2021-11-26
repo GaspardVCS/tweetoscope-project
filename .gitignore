@@ -18,3 +18,7 @@ tweet-generator/tweet-generator
 
 # pycache
 *__pycache__
+
+# my kafka consumer file + kafka file for docker compose test
+*kafka_consumers/
+*kafka_files/
