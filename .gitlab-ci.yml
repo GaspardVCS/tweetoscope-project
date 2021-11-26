@@ -1,6 +1,7 @@
 stages:
   - update_generator_docker_image
   - update_collector_docker_image
+  - update_predictor_docker_image
 
 services:
   - docker:dind
@@ -20,3 +21,11 @@ collector_docker_image:
     - docker build -t  gaspardv/tweetoscope_collector -f docker/Dockerfile.tweet_collector .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_collector
+  
+estimator_docker_image:
+  stage: update_estimator_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_estimator -f docker/Dockerfile.tweet_estimator .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_estimator
