@@ -44,7 +44,6 @@ test_pytest:
   stage: python_unit_tests
   image: python:3.6
   script:
-    - apt-get update -q -y
     - apt-get install -y python-pip
     - pip install -r requirements.txt
     - pip install pytest --quiet
