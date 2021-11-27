@@ -47,7 +47,7 @@ test_pytest:
     - which pip
     - which pip3
     - pip3 install -r requirements.txt
-    - pip install pytest --quiet
+    - pip3 install pytest --quiet
     - pytest --junitxml=report.xml
   artifacts:
     when: always
