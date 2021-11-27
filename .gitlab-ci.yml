@@ -1,8 +1,8 @@
 stages:
-  - update_generator_docker_image
-  - update_collector_docker_image
-  - update_estimator_docker_image
-  - update_predictor_docker_image
+  # - update_generator_docker_image
+  # - update_collector_docker_image
+  # - update_estimator_docker_image
+  # - update_predictor_docker_image
   - python_unit_tests
 
 services:
