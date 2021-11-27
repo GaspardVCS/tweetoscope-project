@@ -1,0 +1,52 @@
+stages:
+  - update_generator_docker_image
+  - update_collector_docker_image
+  - update_estimator_docker_image
+  - update_predictor_docker_image
+  - python_unit_tests
+
+services:
+  - docker:dind
+
+generator_docker_image:
+  stage: update_generator_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_generator -f docker/Dockerfile.tweet_generator .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_generator
+
+collector_docker_image:
+  stage: update_collector_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_collector -f docker/Dockerfile.tweet_collector .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_collector
+  
+estimator_docker_image:
+  stage: update_estimator_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_estimator -f docker/Dockerfile.hawkes_estimator .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_estimator
+  
+predictor_docker_image:
+  stage: update_predictor_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_predictor -f docker/Dockerfile.predictor .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/tweetoscope_predictor
+  
+test_pytest:
+  stage: python_unit_tests
+  image: python:3.6
+  script:
+    - pip install pytest --quiet
+    - pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
