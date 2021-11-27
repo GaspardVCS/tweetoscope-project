@@ -2,7 +2,7 @@
 gaml/
 
 # data files
-*.csv
+# *.csv
 
 # .idx files
 *.idx
