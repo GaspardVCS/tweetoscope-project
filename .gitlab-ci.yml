@@ -44,8 +44,6 @@ test_pytest:
   stage: python_unit_tests
   image: python:3.6
   script:
-    - which pip
-    - which pip3
     - pip3 install -r requirements.txt
     - pip3 install pytest --quiet
     - pytest --junitxml=report.xml
