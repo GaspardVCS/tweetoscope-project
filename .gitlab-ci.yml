@@ -3,6 +3,7 @@ stages:
   - update_collector_docker_image
   - update_estimator_docker_image
   - update_predictor_docker_image
+  - python_unit_tests
 
 services:
   - docker:dind
@@ -38,3 +39,14 @@ predictor_docker_image:
     - docker build -t  gaspardv/tweetoscope_predictor -f docker/Dockerfile.predictor .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_predictor
+  
+test_pytest:
+  stage: python_unit_tests
+  image: python:3.6
+  script:
+    - pip install pytest --quiet
+    - pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
