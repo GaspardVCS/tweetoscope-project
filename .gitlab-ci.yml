@@ -44,7 +44,7 @@ test_pytest:
   stage: python_unit_tests
   image: python:3.6
   script:
-    - pip install pytest --quiet
+    - pip3 install pytest --quiet
     - pytest --junitxml=report.xml
   artifacts:
     when: always
