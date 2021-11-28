@@ -53,14 +53,14 @@ predictor_docker_image:
     changes:
       - predictor/*
   
-test_pytest:
-  stage: python_unit_tests
-  image: python:3.6
-  script:
-    - pip install -r requirements.txt
-    - pip install pytest --quiet
-    - pytest --junitxml=report.xml
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
+# test_pytest:
+#   stage: python_unit_tests
+#   image: python:3.6
+#   script:
+#     - pip install -r requirements.txt
+#     - pip install pytest --quiet
+#     - pytest --junitxml=report.xml
+#   artifacts:
+#     when: always
+#     reports:
+#       junit: report.xml
