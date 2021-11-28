@@ -15,6 +15,10 @@ generator_docker_image:
     - docker build -t  gaspardv/tweetoscope_generator -f docker/Dockerfile.tweet_generator .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_generator
+  only:
+    changes:
+      - tweet_generator/*
+
 
 collector_docker_image:
   stage: update_collector_docker_image
@@ -23,6 +27,9 @@ collector_docker_image:
     - docker build -t  gaspardv/tweetoscope_collector -f docker/Dockerfile.tweet_collector .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_collector
+  only:
+    changes:
+      - tweet_collector/*
   
 estimator_docker_image:
   stage: update_estimator_docker_image
@@ -31,6 +38,9 @@ estimator_docker_image:
     - docker build -t  gaspardv/tweetoscope_estimator -f docker/Dockerfile.hawkes_estimator .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_estimator
+  only:
+    changes:
+      - hawkes_estimator/*
   
 predictor_docker_image:
   stage: update_predictor_docker_image
@@ -39,6 +49,9 @@ predictor_docker_image:
     - docker build -t  gaspardv/tweetoscope_predictor -f docker/Dockerfile.predictor .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
     - docker push  gaspardv/tweetoscope_predictor
+  only:
+    changes:
+      - predictor/*
   
 test_pytest:
   stage: python_unit_tests
