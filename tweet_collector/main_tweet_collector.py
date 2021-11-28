@@ -34,6 +34,7 @@ if __name__ == "__main__":
     from processor import Processor
     from tweet import Tweet
     processor_map = dict()
+    print("Initialisation ok!")
     for msg in consumer:
       tweet = Tweet(msg)
       if tweet.source not in processor_map:
