@@ -21,3 +21,6 @@ tweet-generator/tweet-generator
 
 # my kafka consumer file + kafka file for docker compose test
 *kafka_files/
+
+#pickle files
+*.pickle
