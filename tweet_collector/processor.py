@@ -1,5 +1,4 @@
 from tweet import Tweet
-import time
 from cascade import Cascade
 
 class Processor:
