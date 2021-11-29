@@ -18,7 +18,7 @@ services:
     network_mode: "host"
   
   learner:
-    image: gaspardv/tweetoscope_leaner
+    image: gaspardv/tweetoscope_learner
     network_mode: "host"
   
   # consumer:
