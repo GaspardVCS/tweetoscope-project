@@ -8,6 +8,7 @@ class Predictor:
         self.producer = KafkaProducer(bootstrap_servers = params["brokers"],
                                     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
                                     key_serializer=str.encode)
+        self.model = None
         self.cascade_map = dict()
     
     def process_message(self, message:dict) -> None:
@@ -58,9 +59,14 @@ class Predictor:
             self.producer.send("alert", key=alert_key, value=alert_message) # Send a new message to topic
             self.producer.flush() # not sure if necessary or not
 
-
     def predict(self, message:dict) -> float:
-        prediction = message["n_supp"]
+        if self.model is not None:
+            X = message["params"]
+            w = self.model.predict([X[1:]])[0]
+            n, n_star, G1 = message["n_obs"], X[2], X[3]
+            prediction = n + w * G1 / (1 - n_star)
+        else:
+            prediction = message["n_supp"]
         return prediction
 
     def update_map(self, message:dict) -> None:
@@ -77,6 +83,9 @@ class Predictor:
                 self.cascade_map[cid]["W"] = W
         else:
             raise Error # Not sure about the syntax
+    
+    def update_model(self, model):
+        self.model = model
 
     @staticmethod
     def find_true_omega(cascade_dict:dict) -> float:
