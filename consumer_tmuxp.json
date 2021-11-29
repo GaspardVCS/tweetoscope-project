@@ -4,7 +4,6 @@
             "window_name": "name",
             "layout": "tiled",
             "shell_command_before": [
-                "clear",
                 ". venv/bin/activate",
                 "cd kafka_consumers"
             ],
