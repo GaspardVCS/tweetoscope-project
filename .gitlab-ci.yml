@@ -3,6 +3,7 @@ stages:
   - update_collector_docker_image
   - update_estimator_docker_image
   - update_predictor_docker_image
+  - update_learner_docker_image
   - python_unit_tests
 
 services:
@@ -52,6 +53,17 @@ predictor_docker_image:
   only:
     changes:
       - predictor/*
+
+learner_docker_image:
+  stage: update_learner_docker_image
+  image: docker:latest
+  script:
+    - docker build -t  gaspardv/tweetoscope_learner -f docker/Dockerfile.learner .
+    - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
+    - docker push  gaspardv/learner_predictor
+  only:
+    changes:
+      - learner/*
   
 # test_pytest:
 #   stage: python_unit_tests
