@@ -4,9 +4,9 @@ from kafka import KafkaProducer
 import json
 
 producer = KafkaProducer(
-  bootstrap_servers = "localhost:9092",                     # List of brokers passed from the command line
-  value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
-  key_serializer=str.encode                                        # How to serialize the key
+  bootstrap_servers = "localhost:9092",
+  value_serializer=lambda v: pickle.dumps(v), # change json to pickle
+  key_serializer=str.encode
 )
 
 class Learner:
@@ -14,26 +14,27 @@ class Learner:
         self.key = key
         self.X = []
         self.y = []
-        self.number_of_sample_to_train = 3
+        self.number_of_sample_to_train = 50
         self.max_sample_cache = 1000
-        self.model = RandomForestRegressor(max_depth=2, random_state=0)
+        self.model = RandomForestRegressor(max_depth=20, random_state=0)
     
     def ready_to_train(self):
         return (len(self.X) + 1) % self.number_of_sample_to_train == 0
     
     def process_sample(self, sample):
-        print(f"sample {len(self.X)} is being processed...")
-        self.X.append(sample["X"])
+        self.X.append(sample["X"][1:])
         self.y.append(sample["W"])
         if self.ready_to_train():
-            print("Model is training...")
-            print(self.X)
-            print(self.y)
+            print(f"{self.key} Model is training...")
             self.model.fit(self.X, self.y)
+            print("model finished training")
             self.send_model()
+            print("model sent!")
+            if len(self.X) > self.max_sample_cache:
+                self.X = self.X[self.number_of_sample_to_train:]
 
     def send_model(self):
-        model = pickle.dump(self.model, open(f"random_forest_{self.key}.pickle", 'wb'))
-        print(model)
+        producer.send("model", key=self.key, value=self.model)
+        
 
 
