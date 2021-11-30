@@ -4,6 +4,7 @@ from kafka import KafkaProducer
 import json
 from params import params
 
+
 producer = KafkaProducer(
   bootstrap_servers = params["brokers"],
   value_serializer=lambda v: pickle.dumps(v), # change json to pickle
