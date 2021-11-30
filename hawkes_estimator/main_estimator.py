@@ -4,12 +4,14 @@ import numpy as np
 import json
 from params import params
 
+# Initialize Kafka consumer for the cascade_series topic
 consumer = KafkaConsumer('cascade_series',                             # Topic name
   bootstrap_servers = params["brokers"],                 # List of brokers passed from the command line
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
   key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
 )
 
+# Initialize Kafka producer
 producer = KafkaProducer(
   bootstrap_servers = params["brokers"],                     # List of brokers passed from the command line
   value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
@@ -41,7 +43,7 @@ def main_estimator() -> None:
                 "params": list(params), # p, beta, n_star, G1
             }
 
-            producer.send("cascade_properties", key=str(observation), value=msg) # Send a new message to topic
+            producer.send("cascade_properties", key=str(observation), value=msg)
             producer.flush() # not sure if necessary or not
 
 if __name__ == "__main__":
