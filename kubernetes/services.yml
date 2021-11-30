@@ -37,4 +37,4 @@ spec:
     imagePullPolicy: Always
     tty: true
     command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py --broker-list kafka-service:9092"]
+    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py --broker_list kafka-service:9092"]
