@@ -2,15 +2,17 @@ import json
 import pickle
 from kafka import KafkaConsumer, KafkaProducer
 from predictor import Predictor
+from params import params
+
 
 consumer_properties = KafkaConsumer('cascade_properties',
-  bootstrap_servers = "localhost:9092",
+  bootstrap_servers = params["brokers"],
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),
   key_deserializer= lambda v: v.decode()
 )
 
 consumer_model = KafkaConsumer('model',
-  bootstrap_servers = "localhost:9092",
+  bootstrap_servers = params["brokers"],
   value_deserializer=lambda v: pickle.loads(v),
   key_deserializer= lambda v: v.decode()
 )
@@ -25,7 +27,7 @@ if __name__ == "__main__":
                 if msg.key not in predictor_map:
                     params = {
                         "key": msg.key,
-                        "brokers": "localhost:9092",
+                        "brokers": params["brokers"],
                     }
                     predictor_map[msg.key] = Predictor(params)
                 predictor_map[msg.key].process_message(msg.value)
