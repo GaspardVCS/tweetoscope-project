@@ -60,7 +60,7 @@ learner_docker_image:
   script:
     - docker build -t  gaspardv/tweetoscope_learner -f docker/Dockerfile.learner .
     - docker login -u gaspardv -p $CI_REGISTRY_TOKEN $CI_REGISTRY
-    - docker push  gaspardv/learner_predictor
+    - docker push  gaspardv/tweetoscope_learner
   only:
     changes:
       - learner/*
