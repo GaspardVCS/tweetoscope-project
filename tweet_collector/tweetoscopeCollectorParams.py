@@ -1,5 +1,10 @@
 from typing import Union, Tuple
 
+"""
+I made a 'translation' from the C++ file proposed. I think this might be 
+a litlle bit too much for the use I have of it. If I have time, I will
+replace it by a simple dictionnary.
+"""
 class Kafka:
     def __init__(self) -> None:
         self.brokers = None

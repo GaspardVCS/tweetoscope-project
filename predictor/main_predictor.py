@@ -4,7 +4,7 @@ from kafka import KafkaConsumer, KafkaProducer
 from predictor import Predictor
 from params import params
 
-
+# Initialize two consumers for the topics cascade_properties and model
 consumer_properties = KafkaConsumer('cascade_properties',
   bootstrap_servers = params["brokers"],
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),
@@ -17,7 +17,8 @@ consumer_model = KafkaConsumer('model',
   key_deserializer= lambda v: v.decode()
 )
 
-if __name__ == "__main__":
+def main():
+    # Create a map where key is the time window and value a predictor object
     predictor_map = dict()
     while True:
         cascade_properties = consumer_properties.poll(timeout_ms=100)
@@ -42,4 +43,6 @@ if __name__ == "__main__":
                 else:
                     predictor_map[msg.key].update_model(msg.value)
 
+if __name__ == "__main__":
+    main()
 

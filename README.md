@@ -1,6 +1,6 @@
 # Tweetoscope project
 
-## Table of Contents  
+## Table of Contents 
 [1. Setting up](#setting-up) <br>
 [2. Run the project in local with docker-compose](#run-the-project-in-local-with-docker-compose) <br>
 [3. Overview of the files](#overview-of-the-files) <br>

@@ -8,6 +8,8 @@ parser.add_argument("param_file_path", help="Path to the collector parameters fi
 args = parser.parse_args()
 
 collector = TweetoscopeCollectorParams(args.param_file_path)
+
+# parameters needed for the Processor
 params = {
   "brokers": collector.kafka.brokers,
   "in": collector.topic.in_,
@@ -18,27 +20,33 @@ params = {
   "out_properties": collector.topic.out_properties,
 }
 
-consumer = KafkaConsumer(params["in"],                             # Topic name
-  bootstrap_servers = params["brokers"],                 # List of brokers passed from the command line
-  value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
-  key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
+# Initialize Kafka consumer and producer
+consumer = KafkaConsumer(params["in"],
+  bootstrap_servers = params["brokers"],
+  value_deserializer=lambda v: json.loads(v.decode('utf-8')),
+  key_deserializer= lambda v: v.decode()
 )
 
 producer = KafkaProducer(
-  bootstrap_servers = collector.kafka.brokers,                     # List of brokers passed from the command line
-  value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
-  key_serializer=str.encode                                        # How to serialize the key
+  bootstrap_servers = collector.kafka.brokers,
+  value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+  key_serializer=str.encode
 )
+
+def main():
+  processor_map = dict()
+  print("Initialisation ok!")
+  for msg in consumer:
+    tweet = Tweet(msg)
+    if tweet.source not in processor_map:
+        processor_map[tweet.source] = Processor(tweet.source, params)
+        print(f"New Processor {tweet.source} !!")
+    processor_map[tweet.source].process_tweet(tweet)
+    del tweet
 
 if __name__ == "__main__":
     from processor import Processor
     from tweet import Tweet
-    processor_map = dict()
-    print("Initialisation ok!")
-    for msg in consumer:
-      tweet = Tweet(msg)
-      if tweet.source not in processor_map:
-          processor_map[tweet.source] = Processor(tweet.source, params)
-          print(f"New Processor {tweet.source} !!")
-      processor_map[tweet.source].process_tweet(tweet)
-      del tweet
+
+    main()
+    
