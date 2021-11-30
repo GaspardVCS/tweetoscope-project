@@ -13,7 +13,7 @@ class Cascade:
 
     def process_tweet(self, tweet:Tweet) -> None:
         """
-        Add the retweet time and retweet maginitude 
+        Add the retweet time and retweet magnitude 
         to the cascade
         """
         self.rt_mag_time.append((tweet.time, tweet.magnitude))
