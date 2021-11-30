@@ -2,7 +2,7 @@
 gaml/
 
 # data files
-*.csv
+# *.csv
 
 # .idx files
 *.idx
@@ -20,5 +20,7 @@ tweet-generator/tweet-generator
 *__pycache__
 
 # my kafka consumer file + kafka file for docker compose test
-*kafka_consumers/
 *kafka_files/
+
+#pickle files
+*.pickle

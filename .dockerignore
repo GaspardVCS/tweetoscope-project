@@ -1,2 +1,5 @@
 # pycache
 *__pycache__
+
+# pickle files
+*.pickle

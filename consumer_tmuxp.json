@@ -1,0 +1,50 @@
+{
+    "windows": [
+        {
+            "window_name": "name",
+            "layout": "tiled",
+            "shell_command_before": [
+                ". venv/bin/activate",
+                "cd kafka_consumers"
+            ],
+            "panes": [
+                {
+                    "shell_command":[
+                        "python3 alert_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 properties_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 sample_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 stat_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 series_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 model_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 tweets_consumer.py"
+                    ]
+                }
+            ]
+        }
+    ],
+    "session_name": "consumers"
+}

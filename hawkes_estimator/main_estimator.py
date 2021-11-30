@@ -2,15 +2,16 @@ from estimator import Estimator
 from kafka import KafkaConsumer, KafkaProducer
 import numpy as np
 import json
+from params import params
 
 consumer = KafkaConsumer('cascade_series',                             # Topic name
-  bootstrap_servers = "localhost:9092",                 # List of brokers passed from the command line
+  bootstrap_servers = params["brokers"],                 # List of brokers passed from the command line
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
   key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
 )
 
 producer = KafkaProducer(
-  bootstrap_servers = 'localhost:9092',                     # List of brokers passed from the command line
+  bootstrap_servers = params["brokers"],                     # List of brokers passed from the command line
   value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
   key_serializer=str.encode                                        # How to serialize the key
 )
