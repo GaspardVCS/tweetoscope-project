@@ -27,9 +27,24 @@
                     "shell_command": [
                         "python3 stat_consumer.py"
                     ]
+                },
+                {
+                    "shell_command": [
+                        "python3 series_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 model_consumer.py"
+                    ]
+                },
+                {
+                    "shell_command": [
+                        "python3 tweets_consumer.py"
+                    ]
                 }
             ]
         }
     ],
-    "session_name": "consumers local"
+    "session_name": "consumers"
 }
