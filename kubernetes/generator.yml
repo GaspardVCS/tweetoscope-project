@@ -25,3 +25,16 @@ spec:
     command : ["/bin/sh","-c"]
     args: ["python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"]
 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: estimator-pod
+spec:
+  containers:
+  - name: estimator-container
+    image: gaspardv/tweetoscope_estimator
+    imagePullPolicy: Always
+    tty: true
+    command : ["/bin/sh","-c"]
+    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py --broker-list kafka-service:9092"]
