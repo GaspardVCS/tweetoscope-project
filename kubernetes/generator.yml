@@ -8,6 +8,9 @@ spec:
     image: gaspardv/tweetoscope_generator
     imagePullPolicy: Always
     tty: true
+    command : ["/bin/sh","-c"]
+    args: ["cd tweetoscope/tweet_generator/; ./tweet-generator params.config-deploy"]
+
 
 apiVersion: v1
 kind: Pod
@@ -19,3 +22,6 @@ spec:
     image: gaspardv/tweetoscope_collector
     imagePullPolicy: Always
     tty: true
+    command : ["/bin/sh","-c"]
+    args: ["python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"]
+
