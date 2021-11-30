@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: generator-pod
+spec:
+  containers:
+  - name: generator-container
+    image: gaspardv/tweetoscope_generator
+    imagePullPolicy: Always
+    tty: true
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: collector-pod
+spec:
+  containers:
+  - name: collector-container
+    image: gaspardv/tweetoscope_collector
+    imagePullPolicy: Always
+    tty: true
