@@ -12,9 +12,29 @@ class Predictor:
         self.cascade_map = dict()
     
     def process_message(self, message:dict) -> None:
+        """
+        Process the new message. First update the cascade information based on the new message. 
+        Then send messages to the different kafka topics if needed.
+        """
         self.update_map(message)
         cid = message["cid"]
-        if (message["type"] == "size") and cid in self.cascade_map:
+        if message["type"] == "parameters":
+            # Get the prediction
+            prediction = self.predict(message)
+            self.cascade_map[cid]["prediction"] = prediction
+            # Send message to the alert topic
+            alert_key = ""
+            alert_message = {
+                "type": "alert",
+                "cid": cid,
+                "msg": None,
+                "T_obs": self.key,
+                "n_tot": prediction,
+            }
+            self.producer.send("alert", key=alert_key, value=alert_message)
+            self.producer.flush() # not sure if necessary or not
+
+        elif (message["type"] == "size") and cid in self.cascade_map:
             # Send message to the sample topic for training
             sample_key = self.key
             sample_message = {
@@ -24,7 +44,7 @@ class Predictor:
                 "W": self.cascade_map[cid]["W"]
             }
 
-            self.producer.send("sample", key=sample_key, value=sample_message) # Send a new message to topic
+            self.producer.send("sample", key=sample_key, value=sample_message)
             self.producer.flush() # not sure if necessary or not
 
             # Send the prediction error to the stat topic
@@ -38,28 +58,18 @@ class Predictor:
                 "ARE": self.compute_are(n_pred, n_true),
             }
 
-            self.producer.send("stat", key=stat_key, value=stat_message) # Send a new message to topic
+            self.producer.send("stat", key=stat_key, value=stat_message)
             self.producer.flush() # not sure if necessary or not
 
             del self.cascade_map[cid]
             
-        elif message["type"] == "parameters":
-            # Get the prediction
-            prediction = self.predict(message)
-            self.cascade_map[cid]["prediction"] = prediction
-            # Send message to the alert topic
-            alert_key = ""
-            alert_message = {
-                "type": "alert",
-                "cid": cid,
-                "msg": None,
-                "T_obs": self.key,
-                "n_tot": prediction,
-            }
-            self.producer.send("alert", key=alert_key, value=alert_message) # Send a new message to topic
-            self.producer.flush() # not sure if necessary or not
+        
 
     def predict(self, message:dict) -> float:
+        """
+        Return the prediction. Uses the one of the hawkes estimator if
+        no model is available.
+        """
         if self.model is not None:
             X = message["params"]
             w = self.model.predict([X])[0]
@@ -70,6 +80,10 @@ class Predictor:
         return prediction
 
     def update_map(self, message:dict) -> None:
+        """
+        Update the information of a given cascade. First, we get the parameters given by the 
+        Hawkes estimator. Second, we get the real size of the cascade. 
+        """
         cid = message["cid"]
         if message["type"] == "parameters":
             self.cascade_map[cid] = {
@@ -85,10 +99,17 @@ class Predictor:
             raise Error # Not sure about the syntax
     
     def update_model(self, model):
+        """
+        Replace the old model by the new one
+        """
+        del self.model
         self.model = model
 
     @staticmethod
     def find_true_omega(cascade_dict:dict) -> float:
+        """
+        Calculate the real omega that has to be predicted by the model
+        """
         _, _, n_star, G1 = cascade_dict["params"]
         W = cascade_dict["n_tot"] - cascade_dict["n_obs"]
         W *= (1 - n_star) / G1
@@ -96,4 +117,7 @@ class Predictor:
 
     @staticmethod
     def compute_are(n_pred:float, n_true:int) -> float:
+        """
+        Calculate the ARE metric
+        """
         return abs(n_true - n_pred) / n_true
