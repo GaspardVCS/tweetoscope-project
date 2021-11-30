@@ -17,6 +17,10 @@ services:
     image: gaspardv/tweetoscope_predictor
     network_mode: "host"
   
+  learner:
+    image: gaspardv/tweetoscope_learner
+    network_mode: "host"
+  
   # consumer:
   #   depends_on:
   #     - kafka-service

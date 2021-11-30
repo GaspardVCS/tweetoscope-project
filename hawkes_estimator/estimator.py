@@ -27,6 +27,7 @@ def loglikelihood(params, history, t):
         i = 0
         for ti,mi in history[1:]:
             if(prev_mi + np.exp(logA) <= 0):
+                prev_mi += 1
                 print("Bad value", prev_mi + np.exp(logA))
             
             logA = np.log(prev_mi + np.exp(logA)) - beta * (ti - prev_ti)
