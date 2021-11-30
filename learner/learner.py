@@ -16,15 +16,15 @@ class Learner:
         self.key = key
         self.X = []
         self.y = []
-        self.number_of_sample_to_train = 50
+        self.number_of_sample_to_train = 20
         self.max_sample_cache = 1000
-        self.model = RandomForestRegressor(max_depth=20, random_state=0)
+        self.model = RandomForestRegressor(max_depth=10, random_state=0)
     
     def ready_to_train(self):
         return (len(self.X) + 1) % self.number_of_sample_to_train == 0
     
     def process_sample(self, sample):
-        self.X.append(sample["X"][1:])
+        self.X.append(sample["X"])
         self.y.append(sample["W"])
         if self.ready_to_train():
             print(f"{self.key} Model is training...")

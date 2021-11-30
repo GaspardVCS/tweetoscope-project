@@ -62,7 +62,7 @@ class Predictor:
     def predict(self, message:dict) -> float:
         if self.model is not None:
             X = message["params"]
-            w = self.model.predict([X[1:]])[0]
+            w = self.model.predict([X])[0]
             n, n_star, G1 = message["n_obs"], X[2], X[3]
             prediction = n + w * G1 / (1 - n_star)
         else:
