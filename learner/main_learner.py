@@ -1,9 +1,10 @@
 from kafka import KafkaConsumer, KafkaProducer
 import json
+from params import params
 from learner import Learner
 
 consumer = KafkaConsumer("sample",                       
-  bootstrap_servers = "localhost:9092",
+  bootstrap_servers = params["brokers"],
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),
   key_deserializer= lambda v: v.decode()
 )
