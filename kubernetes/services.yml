@@ -37,4 +37,18 @@ spec:
     imagePullPolicy: Always
     tty: true
     command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py --broker_list kafka-service:9092"]
+    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py kafka-service:9092"]
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: predictor-pod
+spec:
+  containers:
+  - name: predictor-container
+    image: gaspardv/tweetoscope_predictor
+    imagePullPolicy: Always
+    tty: true
+    command : ["/bin/sh","-c"]
+    args: ["python3 ./tweetoscope/predictor/main_predictor.py kafka-service:9092"]
