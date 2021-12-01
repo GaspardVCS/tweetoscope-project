@@ -9,5 +9,3 @@ RUN mkdir -p tweetoscope
 COPY requirements.txt ./tweetoscope
 COPY hawkes_estimator/ ./tweetoscope/hawkes_estimator/
 RUN cd tweetoscope; pip3 install -r requirements.txt; cd ..
-
-# CMD python3 ./tweetoscope/hawkes_estimator/main_estimator.py
