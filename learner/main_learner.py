@@ -26,7 +26,6 @@ def main():
     # Map where the key is the time window and the value a learner object  
     learner_map = dict()
     for msg in consumer:
-        print("learner is working correctly !!")
         if msg.key not in learner_map:
             learner_map[msg.key] = Learner(msg.key)
         if msg.value["type"] == "sample":
