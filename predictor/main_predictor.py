@@ -25,7 +25,6 @@ def main():
     # Create a map where key is the time window and value a predictor object
     predictor_map = dict()
     while True:
-        print("predictor is working !!")
         cascade_properties = consumer_properties.poll(timeout_ms=100)
         if cascade_properties:
             cascade_properties = cascade_properties.get(list(cascade_properties.keys())[0])
