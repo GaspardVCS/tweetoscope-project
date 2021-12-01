@@ -10,4 +10,4 @@ COPY requirements.txt ./tweetoscope
 COPY predictor/ ./tweetoscope/predictor/
 RUN cd tweetoscope; pip3 install -r requirements.txt; cd ..
 
-CMD python3 ./tweetoscope/predictor/main_predictor.py
+# CMD python3 ./tweetoscope/predictor/main_predictor.py
