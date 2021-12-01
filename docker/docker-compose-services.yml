@@ -3,13 +3,13 @@ version: '3.3'
 services:
   tweet_generator:
     image: gaspardv/tweetoscope_generator
-    command: /bin/sh -c "cd tweetoscope/tweet_generator; ./tweet-generator params.config-deploy"
+    command: /bin/sh -c "cd tweetoscope/tweet_generator; ./tweet-generator params.config"
     network_mode: "host"
   
   tweet_collector:
     image: gaspardv/tweetoscope_collector
     network_mode: "host"
-    command: /bin/sh -c "python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"
+    command: /bin/sh -c "python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params"
   
   hawkes_estimator:
     image: gaspardv/tweetoscope_estimator
