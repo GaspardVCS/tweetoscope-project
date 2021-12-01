@@ -27,7 +27,6 @@ producer = KafkaProducer(
 def main_estimator() -> None:
     estimator = Estimator()
     while True:
-        print("test")
         cascade_series = consumer.poll(timeout_ms=100)
         if cascade_series:
             cascade_series = cascade_series.get(list(cascade_series.keys())[0])
