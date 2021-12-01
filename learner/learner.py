@@ -1,5 +1,4 @@
 from sklearn.ensemble import RandomForestRegressor
-from kafka import KafkaProducer
 from main_learner import producer
 
 class Learner:
