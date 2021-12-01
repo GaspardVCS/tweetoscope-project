@@ -12,6 +12,7 @@ For this project you will need: <br>
 <ol>
   <li> docker and docker-compose </li>
   <li> python 3.6 or above</li>
+  <li> minikube</li>
 </ol>
 
 ### clone the project
@@ -51,6 +52,37 @@ In the root of the project:
 ```
 tmuxp load consumer_tmuxp.json
 ```
+
+## Kubernetes
+
+### On minikube
+
+Start minikube
+```
+minikube start
+```
+Once it has started, deploy the kafka server:
+```
+kubectl apply -f kubernetes/kafka-zookeeper.yml
+```
+Check that the two pods are runnning:
+```
+kubectl get pod
+```
+If so, deploy the services:
+```
+kubectl apply -f kubernetes/services.yml
+```
+Once everything is runnig, you can check the messages send to the alert topic or to the stat topic (Change the name to what you see in your terminal)
+```
+kubectl logs stat-deployment-7564db7ffd-ptg2t
+```
+If you want to add replicas of any component, for example the learner, run:
+```
+kubectl scale --replicas=3 deployment/learner-deployment
+```
+
+### On Intercel
 
 ## Overview of the files
 
