@@ -1,68 +1,118 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: generator-pod
+  name: generator-deployment
 spec:
-  containers:
-  - name: generator-container
-    image: gaspardv/tweetoscope_generator
-    imagePullPolicy: Always
-    tty: true
-    command : ["/bin/sh","-c"]
-    args: ["cd tweetoscope/tweet_generator/; ./tweet-generator params.config-deploy"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generator
+  template:
+    metadata:
+      name: generator-pod
+      labels:
+        app: generator
+    spec:
+      containers:
+      - name: generator-container
+        image: gaspardv/tweetoscope_generator
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["cd tweetoscope/tweet_generator/; ./tweet-generator params.config-deploy"]
 
-
-apiVersion: v1
-kind: Pod
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: collector-pod
+  name: collector-deployment
 spec:
-  containers:
-  - name: collector-container
-    image: gaspardv/tweetoscope_collector
-    imagePullPolicy: Always
-    tty: true
-    command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      name: collector-pod
+      labels:
+        app: collector
+    spec:
+      containers:
+      - name: collector-container
+        image: gaspardv/tweetoscope_collector
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"]
 
-
-apiVersion: v1
-kind: Pod
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: estimator-pod
+  name: estimator-deployment
 spec:
-  containers:
-  - name: estimator-container
-    image: gaspardv/tweetoscope_estimator
-    imagePullPolicy: Always
-    tty: true
-    command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py kafka-service:9092"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: estimator
+  template:
+    metadata:
+      name: estimator-pod
+      labels:
+        app: estimator
+    spec:
+      containers:
+      - name: estimator-container
+        image: gaspardv/tweetoscope_estimator
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py kafka-service:9092"]
 
-
-apiVersion: v1
-kind: Pod
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: predictor-pod
+  name: predictor-deployment
 spec:
-  containers:
-  - name: predictor-container
-    image: gaspardv/tweetoscope_predictor
-    imagePullPolicy: Always
-    tty: true
-    command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/predictor/main_predictor.py kafka-service:9092"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: predictor
+  template:
+    metadata:
+      name: predictor-pod
+      labels:
+        app: predictor
+    spec:
+      containers:
+      - name: predictor-container
+        image: gaspardv/tweetoscope_predictor
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/predictor/main_predictor.py kafka-service:9092"]
 
-
-apiVersion: v1
-kind: Pod
+---
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: learner-pod
+  name: learner-deployment
 spec:
-  containers:
-  - name: learner-container
-    image: gaspardv/tweetoscope_learner
-    imagePullPolicy: Always
-    tty: true
-    command : ["/bin/sh","-c"]
-    args: ["python3 ./tweetoscope/learner/main_learner.py kafka-service:9092"]
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learner
+  template:
+    metadata:
+      name: learner-pod
+      labels:
+        app: learner
+    spec:
+      containers:
+      - name: learner-container
+        image: gaspardv/tweetoscope_learner
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/learner/main_learner.py kafka-service:9092"]
