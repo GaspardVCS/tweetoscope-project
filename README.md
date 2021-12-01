@@ -3,8 +3,9 @@
 ## Table of Contents 
 [1. Setting up](#setting-up) <br>
 [2. Run the project in local with docker-compose](#run-the-project-in-local-with-docker-compose) <br>
-[3. Overview of the files](#overview-of-the-files) <br>
-[3. What still needs to be done](#what-still-needs-to-be-done)
+[3. Kubernetes](#kubernetes) <br>
+[4. Overview of the files](#overview-of-the-files) <br>
+[5. What still needs to be done](#what-still-needs-to-be-done)
 
 ## Setting up
 
