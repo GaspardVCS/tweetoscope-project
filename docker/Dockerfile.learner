@@ -10,4 +10,4 @@ COPY requirements.txt ./tweetoscope
 COPY learner/ ./tweetoscope/learner/
 RUN cd tweetoscope; pip3 install -r requirements.txt; cd ..
 
-CMD python3 ./tweetoscope/learner/main_learner.py
+# CMD python3 ./tweetoscope/learner/main_learner.py

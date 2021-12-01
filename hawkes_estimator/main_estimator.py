@@ -3,17 +3,23 @@ from kafka import KafkaConsumer, KafkaProducer
 import numpy as np
 import json
 from params import params
+import argparse
+
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("broker_list", help="list of brokers")
+args = parser.parse_args()
+
 
 # Initialize Kafka consumer for the cascade_series topic
 consumer = KafkaConsumer('cascade_series',                             # Topic name
-  bootstrap_servers = params["brokers"],                 # List of brokers passed from the command line
+  bootstrap_servers = args.broker_list,                 # List of brokers passed from the command line
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
   key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
 )
 
 # Initialize Kafka producer
 producer = KafkaProducer(
-  bootstrap_servers = params["brokers"],                     # List of brokers passed from the command line
+  bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
   value_serializer=lambda v: json.dumps(v).encode('utf-8'),        # How to serialize the value to a binary buffer
   key_serializer=str.encode                                        # How to serialize the key
 )

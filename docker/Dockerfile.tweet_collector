@@ -10,4 +10,4 @@ COPY requirements.txt ./tweetoscope
 COPY tweet_collector/ ./tweetoscope/tweet_collector/
 RUN cd tweetoscope; pip3 install -r requirements.txt; cd ..
 
-CMD python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params
+# CMD python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy

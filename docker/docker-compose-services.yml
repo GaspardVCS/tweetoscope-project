@@ -3,24 +3,29 @@ version: '3.3'
 services:
   tweet_generator:
     image: gaspardv/tweetoscope_generator
+    command: /bin/sh -c "cd tweetoscope/tweet_generator; ./tweet-generator params.config"
     network_mode: "host"
   
   tweet_collector:
     image: gaspardv/tweetoscope_collector
     network_mode: "host"
+    command: /bin/sh -c "python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params"
   
   hawkes_estimator:
     image: gaspardv/tweetoscope_estimator
     network_mode: "host"
-    
+    command: /bin/sh -c "python3 ./tweetoscope/hawkes_estimator/main_estimator.py localhost:9092"
+
   predictor:
     image: gaspardv/tweetoscope_predictor
     network_mode: "host"
-  
+    command: /bin/sh -c "python3 ./tweetoscope/predictor/main_predictor.py localhost:9092"
+
   learner:
     image: gaspardv/tweetoscope_learner
     network_mode: "host"
-  
+    command: /bin/sh -c "python3 ./tweetoscope/learner/main_learner.py localhost:9092"
+
   # consumer:
   #   depends_on:
   #     - kafka-service

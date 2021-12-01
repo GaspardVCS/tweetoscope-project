@@ -1,15 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor
-import pickle
-from kafka import KafkaProducer
-import json
-from params import params
-
-# Initialize a kafka porducer
-producer = KafkaProducer(
-  bootstrap_servers = params["brokers"],
-  value_serializer=lambda v: pickle.dumps(v), # change json to pickle
-  key_serializer=str.encode
-)
+from main_learner import producer
 
 class Learner:
     def __init__(self, key) -> None:

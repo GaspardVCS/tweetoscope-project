@@ -2,17 +2,21 @@ import json
 import pickle
 from kafka import KafkaConsumer, KafkaProducer
 from predictor import Predictor
-from params import params
+import argparse
+
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("broker_list", help="broker list")
+args = parser.parse_args()
 
 # Initialize two consumers for the topics cascade_properties and model
 consumer_properties = KafkaConsumer('cascade_properties',
-  bootstrap_servers = params["brokers"],
+  bootstrap_servers = args.broker_list,
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),
   key_deserializer= lambda v: v.decode()
 )
 
 consumer_model = KafkaConsumer('model',
-  bootstrap_servers = params["brokers"],
+  bootstrap_servers = args.broker_list,
   value_deserializer=lambda v: pickle.loads(v),
   key_deserializer= lambda v: v.decode()
 )
@@ -28,7 +32,7 @@ def main():
                 if msg.key not in predictor_map:
                     params = {
                         "key": msg.key,
-                        "brokers": params["brokers"],
+                        "brokers": args.broker_list,
                     }
                     predictor_map[msg.key] = Predictor(params)
                 predictor_map[msg.key].process_message(msg.value)

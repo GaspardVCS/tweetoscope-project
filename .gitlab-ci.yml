@@ -19,6 +19,7 @@ generator_docker_image:
   only:
     changes:
       - tweet_generator/*
+      - docker/*
 
 
 collector_docker_image:
@@ -31,6 +32,8 @@ collector_docker_image:
   only:
     changes:
       - tweet_collector/*
+      - docker/*
+
   
 estimator_docker_image:
   stage: update_estimator_docker_image
@@ -42,6 +45,8 @@ estimator_docker_image:
   only:
     changes:
       - hawkes_estimator/*
+      - docker/*
+
   
 predictor_docker_image:
   stage: update_predictor_docker_image
@@ -53,6 +58,8 @@ predictor_docker_image:
   only:
     changes:
       - predictor/*
+      - docker/*
+
 
 learner_docker_image:
   stage: update_learner_docker_image
@@ -64,6 +71,8 @@ learner_docker_image:
   only:
     changes:
       - learner/*
+      - docker/*
+
   
 # test_pytest:
 #   stage: python_unit_tests

@@ -1,14 +1,26 @@
 from kafka import KafkaConsumer, KafkaProducer
 import json
-from params import params
-from learner import Learner
+import pickle
+import argparse
+
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("broker_list", help="list of brokers")
+args = parser.parse_args()
 
 # Initialize the Kafka consumer for the sample topic
 consumer = KafkaConsumer("sample",                       
-  bootstrap_servers = params["brokers"],
+  bootstrap_servers = args.broker_list,
   value_deserializer=lambda v: json.loads(v.decode('utf-8')),
   key_deserializer= lambda v: v.decode()
 )
+
+# Initialize a kafka porducer
+producer = KafkaProducer(
+  bootstrap_servers = args.broker_list,
+  value_serializer=lambda v: pickle.dumps(v), # change json to pickle
+  key_serializer=str.encode
+)
+
 
 def main():
     # Map where the key is the time window and the value a learner object  
@@ -21,4 +33,5 @@ def main():
 
 
 if __name__ =="__main__":
+    from learner import Learner
     main()

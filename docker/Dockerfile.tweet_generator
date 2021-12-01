@@ -18,4 +18,4 @@ RUN cd tweetoscope/gaml; mkdir -p gaml/build; cd gaml/build; cmake .. -DCMAKE_IN
 
 COPY tweet_generator/ ./tweetoscope/tweet_generator/
 RUN cd tweetoscope/tweet_generator; g++ -o tweet-generator -O3 -Wall -std=c++17 tweet-generator.cpp `pkg-config --libs --cflags gaml cppkafka` -lpthread;
-CMD cd tweetoscope/tweet_generator; ./tweet-generator params.config
+# CMD cd tweetoscope/tweet_generator; ./tweet-generator params.config-deploy
