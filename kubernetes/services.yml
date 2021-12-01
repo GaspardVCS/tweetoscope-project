@@ -116,3 +116,51 @@ spec:
         tty: true
         command : ["/bin/sh","-c"]
         args: ["python3 ./tweetoscope/learner/main_learner.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alert
+  template:
+    metadata:
+      name: alert-pod
+      labels:
+        app: alert
+    spec:
+      containers:
+      - name: alert-container
+        image: gaspardv/tweetoscope_consumers
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/kafka_consumers/alert_consumer.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stat-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stat
+  template:
+    metadata:
+      name: stat-pod
+      labels:
+        app: stat
+    spec:
+      containers:
+      - name: stat-container
+        image: gaspardv/tweetoscope_consumers
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/kafka_consumers/stat_consumer.py kafka-service:9092"]

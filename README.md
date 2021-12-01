@@ -12,6 +12,7 @@ For this project you will need: <br>
 <ol>
   <li> docker and docker-compose </li>
   <li> python 3.6 or above</li>
+  <li> minikube</li>
 </ol>
 
 ### clone the project
@@ -52,6 +53,37 @@ In the root of the project:
 tmuxp load consumer_tmuxp.json
 ```
 
+## Kubernetes
+
+### On minikube
+
+Start minikube
+```
+minikube start
+```
+Once it has started, deploy the kafka server:
+```
+kubectl apply -f kubernetes/kafka-zookeeper.yml
+```
+Check that the two pods are runnning:
+```
+kubectl get pod
+```
+If so, deploy the services:
+```
+kubectl apply -f kubernetes/services.yml
+```
+Once everything is runnig, you can check the messages send to the alert topic or to the stat topic (Change the name to what you see in your terminal)
+```
+kubectl logs stat-deployment-7564db7ffd-ptg2t
+```
+If you want to add replicas of any component, for example the learner, run:
+```
+kubectl scale --replicas=3 deployment/learner-deployment
+```
+
+### On Intercel
+
 ## Overview of the files
 
 ### tweet_generator
@@ -69,3 +101,10 @@ tmuxp load consumer_tmuxp.json
 ### tests
 
 ## What still needs to be done
+1. change dockerfile images from ubuntu to alpine. I had problem with the python imports, so I kept this change for later. But the tweet generator has an alpine image
+2. Find the best hyperparameters for the random forests. To do so, we can run the simulation for a certain time. Write down the sample send in the coresponding kafka topic. From that we can create a train, test and validation set. Thanks to a GridSearch we would then be able to find the best hyperparameters for the RandomForest models, for the time windows 600 and 1200.
+3. Graphana
+4. In the cicd, there are still problems with the unit test pipeline. Basically, it failed because it didn't find the pip/pip3 command. But it worked at least once with the exact same code, so I don't understand the problem. I kept it for later if there is still time to investigate.
+5. If point 4. is done, add some real unit tests, not just the fake ones created to test the cicd pipeline.
+6. Automatic code quality report
+7. Logger import problem when not at the root of the repo
