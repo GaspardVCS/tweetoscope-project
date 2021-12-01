@@ -10,37 +10,37 @@
             "panes": [
                 {
                     "shell_command":[
-                        "python3 alert_consumer.py"
+                        "python3 tweets_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 properties_consumer.py"
+                        "python3 properties_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 sample_consumer.py"
+                        "python3 sample_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 stat_consumer.py"
+                        "python3 stat_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 series_consumer.py"
+                        "python3 series_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 model_consumer.py"
+                        "python3 model_consumer.py localhost:9092"
                     ]
                 },
                 {
                     "shell_command": [
-                        "python3 tweets_consumer.py"
+                        "python3 alert_consumer.py localhost:9092"
                     ]
                 }
             ]
