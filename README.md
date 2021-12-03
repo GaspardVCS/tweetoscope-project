@@ -85,9 +85,9 @@ kubectl scale --replicas=3 deployment/learner-deployment
 
 ### On Intercel
 
-To deploy on Intercell, you will need to connect to your student-machine. <br>
+To deploy on Intercel, you will need to connect to your student-machine. <br>
 
-Copy the kafka-zookeeper-intercell.yml and services-intercell.yml on your machine. <br> 
+Copy the kubernetes/kafka-zookeeper-intercel.yml and kubernetes/services-intercel.yml on your machine. <br> 
 
 Adapt the namespace to your machine id in both files. <br>
 
