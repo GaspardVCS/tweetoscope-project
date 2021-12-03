@@ -85,21 +85,45 @@ kubectl scale --replicas=3 deployment/learner-deployment
 
 ### On Intercel
 
+To deploy on Intercell, you will need to connect to your student-machine. <br>
+
+Copy the kafka-zookeeper-intercell.yml and services-intercell.yml on your machine. <br> 
+
+Adapt the namespace to your machine id in both files. <br>
+
+You can now launch every kubernetes by precising the namespace in the beginning of your command by "kubeclt -n cpusdi1_XX" (instead of just kubectl)
+
 ## Overview of the files
 
 ### tweet_generator
+Tweet generator folder.
 
 ### tweet_collector
+tweet.py: implements the Tweet object <br>
+cascade.py: implements the Cascade object <br>
+processor.py: implements the Processor object <br>
+main_tweet_collector.py: main file to launch to start the tweet collector. <br>
+tweetoscopeCollectorParams.py: implements an object to reads the collector pameters file. <br>
+collector-params*: text files that give the useful parameters to launch the collector.
+
 
 ### hawkes_estimator
+estimator.py: implements the Estimator object<br>
+main_estimator.py: file to start the Hawkes estimator.
 
 ### predictor
+predictor.py: implements the Predictor object.
+main_predictor.py: file to start the predictor.
+
 
 ### learner
+learner.py: implements the Learner object. Each random forest model retrained everytime 20 new samples have be send to them. They retrain on all the dataset until it reaches a length of 1000.
+main_learner.py: file to start the learners. 
 
 ### kafka_consumers
 
 ### tests
+Folder where all the unit tests are. We use Pytest to run our unit tests.
 
 ## What still needs to be done
 1. change dockerfile images from ubuntu to alpine. I had problem with the python imports, so I kept this change for later. But the tweet generator has an alpine image
@@ -108,4 +132,3 @@ kubectl scale --replicas=3 deployment/learner-deployment
 4. In the cicd, there are still problems with the unit test pipeline. Basically, it failed because it didn't find the pip/pip3 command. But it worked at least once with the exact same code, so I don't understand the problem. I kept it for later if there is still time to investigate.
 5. If point 4. is done, add some real unit tests, not just the fake ones created to test the cicd pipeline.
 6. Automatic code quality report
-7. Logger import problem when not at the root of the repo
