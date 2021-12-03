@@ -35,7 +35,7 @@ producer = KafkaProducer(
 
 def main():
   processor_map = dict()
-  print("Initialisation ok!")
+  print("Initialisation done!")
   for msg in consumer:
     tweet = Tweet(msg)
     if tweet.source not in processor_map:
