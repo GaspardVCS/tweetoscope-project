@@ -1,0 +1,173 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: generator-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generator
+  template:
+    metadata:
+      name: generator-pod
+      labels:
+        app: generator
+    spec:
+      containers:
+      - name: generator-container
+        image: gaspardv/tweetoscope_generator
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["cd tweetoscope/tweet_generator/; ./tweet-generator params.config-deploy"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      name: collector-pod
+      labels:
+        app: collector
+    spec:
+      containers:
+      - name: collector-container
+        image: gaspardv/tweetoscope_collector
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/tweet_collector/main_tweet_collector.py ./tweetoscope/tweet_collector/collector-params-deploy"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: estimator
+  template:
+    metadata:
+      name: estimator-pod
+      labels:
+        app: estimator
+    spec:
+      containers:
+      - name: estimator-container
+        image: gaspardv/tweetoscope_estimator
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/hawkes_estimator/main_estimator.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: predictor-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: predictor
+  template:
+    metadata:
+      name: predictor-pod
+      labels:
+        app: predictor
+    spec:
+      containers:
+      - name: predictor-container
+        image: gaspardv/tweetoscope_predictor
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/predictor/main_predictor.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learner-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learner
+  template:
+    metadata:
+      name: learner-pod
+      labels:
+        app: learner
+    spec:
+      containers:
+      - name: learner-container
+        image: gaspardv/tweetoscope_learner
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/learner/main_learner.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alert
+  template:
+    metadata:
+      name: alert-pod
+      labels:
+        app: alert
+    spec:
+      containers:
+      - name: alert-container
+        image: gaspardv/tweetoscope_consumers
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/kafka_consumers/alert_consumer.py kafka-service:9092"]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stat-deployment
+  namespace: cpusdi1-14-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stat
+  template:
+    metadata:
+      name: stat-pod
+      labels:
+        app: stat
+    spec:
+      containers:
+      - name: stat-container
+        image: gaspardv/tweetoscope_consumers
+        imagePullPolicy: Always
+        tty: true
+        command : ["/bin/sh","-c"]
+        args: ["python3 ./tweetoscope/kafka_consumers/stat_consumer.py kafka-service:9092"]
